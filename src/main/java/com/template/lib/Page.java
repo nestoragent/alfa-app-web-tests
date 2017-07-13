@@ -96,9 +96,11 @@ public abstract class Page {
         List<Method> methods = Core.getDeclaredMethods(this.getClass());
         for (Method method : methods) {
             try {
-                method.setAccessible(true);
-                MethodUtils.invokeMethod(this, method.getName(), param);
-                return;
+                if (title.replaceAll(" ", "_").equals(method.getName())) {
+                    method.setAccessible(true);
+                    MethodUtils.invokeMethod(this, method.getName(), param);
+                    return;
+                }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new FactoryRuntimeException("Error while executing action '" + title + "' on " + method.getDeclaringClass().getSimpleName() + " . See the caused exception below", ExceptionUtils.getRootCause(e));
             }
